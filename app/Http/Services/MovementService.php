@@ -12,7 +12,7 @@ class MovementService
             return response()->json(['error' => 'O valor informado não é válido.'], 400);
         }
 
-        if ($type != 'd' && $type != 's') {
+        if ($type != 'd' && $type != 's' && $type != 'qd') {
             return response()->json(['error' => 'O tipo informado não é válido.'], 400);
         }
 
@@ -42,7 +42,11 @@ class MovementService
             return response()->json(['success' => "Depósito de R$ $value feito com sucesso. Seu novo saldo é: R$ $balance"]);
         }
 
-        if ($type == 's') {
+        if ($type == 's' || $type == 'qd') {
+            if($value > $balance){
+                return response()->json(['error' => "Saldo insuficiente."], 400);
+            }
+
             $user->balance = $balance-$value;
             $user->save();
 
@@ -53,7 +57,14 @@ class MovementService
 
             $value = number_format($value, 2);
             $balance = number_format($user->balance, 2);
-            return response()->json(['success' => "Saque de R$ $value feito com sucesso. Seu novo saldo é: R$ $balance"]);
+
+            if ($type == 's') {
+                return response()->json(['success' => "Saque de R$ $value feito com sucesso. Seu novo saldo é: R$ $balance"]);
+            }
+
+            if ($type == 'qd') {
+                return response()->json(['success' => "Dívida de R$ $value paga com sucesso. Seu novo saldo é: R$ $balance"]);
+            }
         }
     }
 }

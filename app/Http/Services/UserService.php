@@ -82,16 +82,26 @@ class UserService
         }
 
         if ($type != null) {
-            if ($type != 'd' && $type != 's') {
+            if ($type != 'd' && $type != 's' && $type != 'qd') {
                 return response()->json(['error' => 'O tipo informado não é válido.'], 400);
             }
 
             $result = $user->movements->where('type', $type);
 
-            $type == 'd' ? $type = 'depósito' : $type = 'saque';
-
             if (count($result) == 0) {
-                return response()->json(['error' => "Este usuário ainda não realizou nenhum $type!"], 400);
+                switch ($type) {
+                    case 'd':
+                        $message = 'realizou nenhum depósito';
+                        break;
+                    case 's':
+                        $message = 'realizou nenhum saque';
+                        break;
+                    case 'qd':
+                        $message = 'quitou nenhuma dívida';
+                        break;
+                }
+                
+                return response()->json(['error' => "Este usuário ainda não $message!"], 400);
             }
 
         } else {

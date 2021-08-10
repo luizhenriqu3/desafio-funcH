@@ -9,17 +9,17 @@ class MovementService
 {
     public function executeMovement($type, $count, $value){
         if (!is_numeric($value)) {
-            return response()->json(['error' => 'O valor informado não é válido.']);
+            return response()->json(['error' => 'O valor informado não é válido.'], 400);
         }
 
         if ($type != 'd' && $type != 's') {
-            return response()->json(['error' => 'O tipo informado não é válido.']);
+            return response()->json(['error' => 'O tipo informado não é válido.'], 400);
         }
 
         $user = User::where('count', $count)->get();
 
         if (count($user) == 0) {
-            return response()->json(['error' => 'Conta não encontrada.']);
+            return response()->json(['error' => 'Conta não encontrada.'], 400);
         }
 
         $user = User::find($user[0]['id']);

@@ -20,7 +20,7 @@ class UserController extends Controller
         $result = User::all();
 
         if (count($result) == 0) {
-            return response()->json(['error' => 'Nenhum usuário encontrado.']);
+            return response()->json(['error' => 'Nenhum usuário encontrado.'], 400);
         }
 
         return response()->json($result);

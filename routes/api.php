@@ -22,4 +22,5 @@ Route::put('/users/{id}', [UserController::class, 'update']);
 Route::get('/users/{id}/movements/{type?}', [UserController::class, 'userMovements']);
 Route::get('/users/{id}/balance', [UserController::class, 'userBalance']);
 
+Route::get('/movements', [MovementController::class, 'all']);
 Route::post('/movements/{type}', [MovementController::class, 'executeMovement']);

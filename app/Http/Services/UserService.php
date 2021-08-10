@@ -14,14 +14,14 @@ class UserService
                 $user->$field = $value;
 
                 if (!$value) {
-                    return response()->json(['error' => "O campo '$field' precisa ser preenchido"]);
+                    return response()->json(['error' => "O campo '$field' precisa ser preenchido"], 400);
                 }
 
                 if ($field == 'count') {
                     $resCount = User::where($field, $value)->get();
 
                     if(count($resCount) > 0) {
-                        return response()->json(['error' => "Já existe um usuário criado com a conta informada!"]);
+                        return response()->json(['error' => "Já existe um usuário criado com a conta informada!"], 400);
                     }
                 }
             }
@@ -43,14 +43,14 @@ class UserService
                 $user->$field = $value;
 
                 if (!$value) {
-                    return response()->json(['error' => "O campo '$field' precisa ser preenchido"]);
+                    return response()->json(['error' => "O campo '$field' precisa ser preenchido"], 400);
                 }
 
                 if ($field == 'count') {
                     $resCount = User::where($field, $value)->get();
 
                     if(count($resCount) > 0 && $resCount[0]['id'] != $id) {
-                        return response()->json(['error' => "Já existe um usuário com a conta informada!"]);
+                        return response()->json(['error' => "Já existe um usuário com a conta informada!"], 400);
                     }
                 }
             }
@@ -68,7 +68,7 @@ class UserService
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json(['error' => 'Usuário não encontrado!']);
+            return response()->json(['error' => 'Usuário não encontrado!'], 400);
         }
 
         return $user;
@@ -78,12 +78,12 @@ class UserService
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json(['error' => 'Usuário não encontrado!']);
+            return response()->json(['error' => 'Usuário não encontrado!'], 400);
         }
 
         if ($type != null) {
             if ($type != 'd' && $type != 's') {
-                return response()->json(['error' => 'O tipo informado não é válido.']);
+                return response()->json(['error' => 'O tipo informado não é válido.'], 400);
             }
 
             $result = $user->movements->where('type', $type);
@@ -91,14 +91,14 @@ class UserService
             $type == 'd' ? $type = 'depósito' : $type = 'saque';
 
             if (count($result) == 0) {
-                return response()->json(['error' => "Este usuário ainda não realizou nenhum $type!"]);
+                return response()->json(['error' => "Este usuário ainda não realizou nenhum $type!"], 400);
             }
-            
+
         } else {
             $result = $user->movements;
 
             if (count($result) == 0) {
-                return response()->json(['error' => 'Este usuário ainda não realizou movimentações!']);
+                return response()->json(['error' => 'Este usuário ainda não realizou movimentações!'], 400);
             }
         }
 
@@ -109,7 +109,7 @@ class UserService
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json(['error' => 'Usuário não encontrado!']);
+            return response()->json(['error' => 'Usuário não encontrado!'], 400);
         }
 
         $user->balance = number_format($user->balance, 2);

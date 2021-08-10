@@ -23,18 +23,6 @@ class User extends Authenticatable
         'name',
         'count',
         'balance',
-        'username',
-        'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
     ];
 
     public function movements(){

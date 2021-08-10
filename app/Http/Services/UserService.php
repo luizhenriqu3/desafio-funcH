@@ -18,18 +18,10 @@ class UserService
                 }
 
                 if ($field == 'count') {
-                    $resCount = $this->findByAttribute($field, $value);
+                    $resCount = User::where($field, $value)->get();
 
                     if(count($resCount) > 0) {
                         return response()->json(['error' => "Já existe um usuário criado com a conta informada!"]);
-                    }
-                }
-
-                if ($field == 'username') {
-                    $resUserName = $this->findByAttribute($field, $value);
-
-                    if(count($resUserName) > 0){
-                        return response()->json(['error' => "Já existe um usuário criado com o username informado!"]);
                     }
                 }
             }
@@ -55,18 +47,10 @@ class UserService
                 }
 
                 if ($field == 'count') {
-                    $resCount = $this->findByAttribute($field, $value);
+                    $resCount = User::where($field, $value)->get();
 
                     if(count($resCount) > 0 && $resCount[0]['id'] != $id) {
                         return response()->json(['error' => "Já existe um usuário com a conta informada!"]);
-                    }
-                }
-
-                if ($field == 'username' && $resCount[0]['id'] != $id) {
-                    $resUserName = $this->findByAttribute($field, $value);
-
-                    if(count($resUserName) > 0){
-                        return response()->json(['error' => "Já existe um usuário com o username informado!"]);
                     }
                 }
             }
@@ -81,19 +65,13 @@ class UserService
     }
 
     public function findOne($id){
-        $result = $this->findByAttribute('id', $id);
+        $user = User::find($id);
 
-        if (count($result) == 0) {
+        if (!$user) {
             return response()->json(['error' => 'Usuário não encontrado!']);
         }
 
-        return $result;
-    }
-
-    public function findByAttribute($attribute, $value){
-        $result = User::where($attribute, $value)->get();
-
-        return $result;
+        return $user;
     }
 
     public function userMovements($id, $type = null) {
@@ -110,9 +88,14 @@ class UserService
 
             $result = $user->movements->where('type', $type);
 
+            $type == 'd' ? $type = 'depósito' : $type = 'saque';
+
+            if (count($result) == 0) {
+                return response()->json(['error' => "Este usuário ainda não realizou nenhum $type!"]);
+            }
+            
         } else {
             $result = $user->movements;
-
 
             if (count($result) == 0) {
                 return response()->json(['error' => 'Este usuário ainda não realizou movimentações!']);

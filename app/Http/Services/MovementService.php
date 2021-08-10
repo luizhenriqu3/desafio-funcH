@@ -2,15 +2,12 @@
 
 namespace App\Http\Services;
 
-use App\Http\Services\UserService;
 use App\Models\Movement;
 use App\Models\User;
 
 class MovementService
 {
     public function executeMovement($type, $count, $value){
-        $userService = new UserService;
-
         if (!is_numeric($value)) {
             return response()->json(['error' => 'O valor informado não é válido.']);
         }
@@ -19,15 +16,15 @@ class MovementService
             return response()->json(['error' => 'O tipo informado não é válido.']);
         }
 
-        $user_data = $userService->findByAttribute('count', $count);
+        $user = User::where('count', $count)->get();
 
-        if (count($user_data) == 0) {
+        if (count($user) == 0) {
             return response()->json(['error' => 'Conta não encontrada.']);
         }
 
-        $user = User::find($user_data[0]['id']);
+        $user = User::find($user[0]['id']);
 
-        $balance = (float) $user_data[0]['balance'];
+        $balance = (float) $user->balance;
 
         $movement = new Movement;
 

@@ -8,6 +8,13 @@ docker-compose up -d
 
 ```
 
+Logo em seguida, execute:
+
+```
+composer install
+
+```
+
 Feito isso, crie um arquivo na pasta Database chamado 'database.sqlite' e execute o comando:
 
 ```
